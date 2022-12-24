@@ -34,8 +34,8 @@ const YourGames = () => {
         </div>
       ) : (
         <div>
-          <h1 className="text-5xl font-bold f">No Games Found</h1>
-          <Link to={"/Joining"} className="btn btn-warning ">
+          <h1 className="text-5xl font-bold f mt-20">No Games Found</h1>
+          <Link to={"/Joining"} className="btn btn-warning mt-5">
             Start A New Game
           </Link>
         </div>
