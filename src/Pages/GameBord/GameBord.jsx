@@ -324,8 +324,8 @@ const GameBord = () => {
       {loading ? (
         <div className="w-16 mt-32 mx-auto h-16 border-4 border-dashed rounded-full animate-spin border-amber-400"></div>
       ) : (
-        <div className="relative mx-auto p1-5 w-full sm:w-96">
-          <div className="absolute top-5 left-2">
+        <div className="relative mx-auto pt-5 w-full sm:w-96">
+          <div className="absolute top-5 left-1">
             <Link to={"/"}>
               <FaChevronLeft></FaChevronLeft>
             </Link>
