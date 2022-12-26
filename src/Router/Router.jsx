@@ -28,6 +28,9 @@ const router = createBrowserRouter([
       {
         path: "/GameBord/:id",
         element: <Private><GameBord></GameBord></Private>,
+        loader:({params})=>{
+return fetch(`https://tic-tac-toe-server-pi.vercel.app/game/${params?.id}`)
+        }
       },
       {
         path: "/YourGames",

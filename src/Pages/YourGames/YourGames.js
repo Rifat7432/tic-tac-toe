@@ -18,7 +18,9 @@ const YourGames = () => {
       });
   }, [loading,user?.email]);
   return (
-    <div className="w-96 mx-auto">
+   <>
+   {loading ?  <div className="w-16 mt-32 mx-auto h-16 border-4 border-dashed rounded-full animate-spin border-amber-400"></div> :
+   <div className="w-96 mx-auto">
       <h3 className="text-xl">Your Games</h3>
       {data.length > 0 ? (
         <div className="relative">
@@ -40,7 +42,8 @@ const YourGames = () => {
           </Link>
         </div>
       )}
-    </div>
+    </div>}
+    </> 
   );
 };
 

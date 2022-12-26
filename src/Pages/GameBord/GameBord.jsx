@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import GameBox from "../GameBox/GameBox";
 import { io } from "socket.io-client";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLoaderData, useParams } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../ContextProvider/AuthProvider";
 import { toast } from "react-hot-toast";
@@ -20,17 +20,35 @@ const GameBord = () => {
   const [gotWinner, setGotWinner] = useState(false);
   const [isWinner, setIsWinner] = useState("");
   const [gamer, setGamer] = useState({});
+  const [gamerClick, setGamerClick] = useState(false);
 
   const id = useParams();
-  // console.log(myGame);
-  // setInterval()
+  const data = useLoaderData();
+
   useEffect(() => {
     setLoading(true);
     fetch(`https://tic-tac-toe-server-pi.vercel.app/game/${id?.id}`)
       .then((res) => res.json())
       .then((data) => {
-        // console.log(data);
         setMyGame(data);
+        if (data?.player1 === user?.email) {
+          fetch(
+            `https://tic-tac-toe-server-pi.vercel.app/user/${data?.player2}`
+          )
+            .then((res) => res.json())
+            .then((data) => {
+              setGamer(data);
+            });
+        } else {
+          fetch(
+            `https://tic-tac-toe-server-pi.vercel.app/user/${data?.player1}`
+          )
+            .then((res) => res.json())
+            .then((data) => {
+              setGamer(data);
+            });
+        }
+
         setGotWinner(data.machCompleted);
         setIsWinner(data.winner);
         if (data?.turn) {
@@ -44,25 +62,26 @@ const GameBord = () => {
         if (data?.Game) {
           setGameData(data?.Game);
         }
-
         setLoading(false);
       });
-  }, [id]);
-  console.log(gotWinner);
+  }, []);
+
   const game = (i) => {
-    if (gotWinner) {
-      return toast.success("Mach complete");
+    if (gamerClick) {
+      toast.error("click again");
     }
-    const newGameData = [...gameData];
-    console.log(gotWinner);
+    setGamerClick(!gamerClick);
+    if (gotWinner) {
+      return toast.success("Game over");
+    }
     if (gotWinner === false) {
+      const newGameData = [...gameData];
       newGameData[i] = plyerTurn ? "X" : "O";
-      setGameData(newGameData);
       updateData(newGameData, !plyerTurn);
       setPlyerTurn(!plyerTurn);
+      setGameData(newGameData);
       socket.emit("send-massage", { newGameData, room: `${id?.id}` });
       socket.emit("get-turn", { a: !plyerTurn, room: `${id?.id}` });
-
       if (
         newGameData[0] === newGameData[1] &&
         newGameData[1] === newGameData[2] &&
@@ -76,11 +95,11 @@ const GameBord = () => {
         if (newGameData[0] === "X") {
           addWinner(true, myGame?.player2);
 
-          setIsWinner(myGame?.player2);
+          return setIsWinner(myGame?.player2);
         } else {
           addWinner(true, myGame?.player1);
 
-          setIsWinner(myGame?.player1);
+          return setIsWinner(myGame?.player1);
         }
       } else if (
         newGameData[3] === newGameData[4] &&
@@ -95,11 +114,11 @@ const GameBord = () => {
         if (newGameData[3] === "X") {
           addWinner(true, myGame?.player2);
 
-          setIsWinner(myGame?.player2);
+          return setIsWinner(myGame?.player2);
         } else {
           addWinner(true, myGame?.player1);
 
-          setIsWinner(myGame?.player1);
+          return setIsWinner(myGame?.player1);
         }
       } else if (
         newGameData[6] === newGameData[7] &&
@@ -114,11 +133,11 @@ const GameBord = () => {
         if (newGameData[6] === "X") {
           addWinner(true, myGame?.player2);
 
-          setIsWinner(myGame?.player2);
+          return setIsWinner(myGame?.player2);
         } else {
           addWinner(true, myGame?.player1);
 
-          setIsWinner(myGame?.player1);
+          return setIsWinner(myGame?.player1);
         }
       } else if (
         newGameData[0] === newGameData[3] &&
@@ -133,11 +152,11 @@ const GameBord = () => {
         if (newGameData[0] === "X") {
           addWinner(true, myGame?.player2);
 
-          setIsWinner(myGame?.player2);
+          return setIsWinner(myGame?.player2);
         } else {
           addWinner(true, myGame?.player1);
 
-          setIsWinner(myGame?.player1);
+          return setIsWinner(myGame?.player1);
         }
       } else if (
         newGameData[1] === newGameData[4] &&
@@ -152,11 +171,11 @@ const GameBord = () => {
         if (newGameData[1] === "X") {
           addWinner(true, myGame?.player2);
 
-          setIsWinner(myGame?.player2);
+          return setIsWinner(myGame?.player2);
         } else {
           addWinner(true, myGame?.player1);
 
-          setIsWinner(myGame?.player1);
+          return setIsWinner(myGame?.player1);
         }
       } else if (
         newGameData[2] === newGameData[5] &&
@@ -171,11 +190,11 @@ const GameBord = () => {
         if (newGameData[2] === "X") {
           addWinner(true, myGame?.player2);
 
-          setIsWinner(myGame?.player2);
+          return setIsWinner(myGame?.player2);
         } else {
           addWinner(true, myGame?.player1);
 
-          setIsWinner(myGame?.player1);
+          return setIsWinner(myGame?.player1);
         }
       } else if (
         newGameData[0] === newGameData[4] &&
@@ -190,11 +209,11 @@ const GameBord = () => {
         if (newGameData[0] === "X") {
           addWinner(true, myGame?.player2);
 
-          setIsWinner(myGame?.player2);
+          return setIsWinner(myGame?.player2);
         } else {
           addWinner(true, myGame?.player1);
 
-          setIsWinner(myGame?.player1);
+          return setIsWinner(myGame?.player1);
         }
       } else if (
         newGameData[2] === newGameData[4] &&
@@ -210,14 +229,13 @@ const GameBord = () => {
         if (newGameData[2] === "X") {
           addWinner(true, myGame?.player2);
 
-          setIsWinner(myGame?.player2);
+          return setIsWinner(myGame?.player2);
         } else {
           addWinner(true, myGame?.player1);
 
-          setIsWinner(myGame?.player1);
+          return setIsWinner(myGame?.player1);
         }
       } else {
-        console.log("draw1");
         if (
           newGameData[0] !== null &&
           newGameData[2] !== null &&
@@ -228,23 +246,18 @@ const GameBord = () => {
           newGameData[7] !== null &&
           newGameData[8] !== null
         ) {
-          console.log("draw");
-          addDraw(true, true);
+          return addDraw(true, true);
         }
       }
     }
-
-    console.log();
   };
 
   useEffect(() => {
     setLoading(true);
     if (plyerTurn) {
       setIsDisabled1(myGame?.player1);
-      // console.log(myGame, plyerTurn);
     } else {
       setIsDisabled1(myGame?.player2);
-      // console.log(myGame?.player2, plyerTurn);
     }
     setLoading(false);
   }, [plyerTurn]);
@@ -260,6 +273,7 @@ const GameBord = () => {
     })
       .then((res) => res.json())
       .then(() => {
+        setGameData(data);
         setLoading(false);
       });
   };
@@ -292,7 +306,6 @@ const GameBord = () => {
       });
   };
   useEffect(() => {
-    setLoading(true);
     socket.on("receive-massage", (data) => {
       setGameData(data.newGameData);
     });
@@ -302,23 +315,8 @@ const GameBord = () => {
     socket.on("send-winner", (data) => {
       setGotWinner(data.b);
     });
-    setLoading(false);
   }, [socket]);
-  useEffect(() => {
-    if (myGame?.player1 === user?.email) {
-      fetch(`https://tic-tac-toe-server-pi.vercel.app/user/${myGame?.player2}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setGamer(data);
-        });
-    } else {
-      fetch(`https://tic-tac-toe-server-pi.vercel.app/user/${myGame?.player1}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setGamer(data);
-        });
-    }
-  }, [myGame?.player1, myGame?.player2, user]);
+
   return (
     <>
       {loading ? (
@@ -357,9 +355,8 @@ const GameBord = () => {
                   : "Their move"}
               </p>
             )}
-            {/*  */}
           </div>
-          <button className="grid grid-cols-3 rounded grid-rows-3 w-full mx-auto">
+          <div className="grid grid-cols-3 rounded grid-rows-3 w-full mx-auto">
             {gameData.map((c, i) => (
               <GameBox
                 key={i}
@@ -369,7 +366,7 @@ const GameBord = () => {
                 data={c}
               ></GameBox>
             ))}
-          </button>
+          </div>
         </div>
       )}
     </>
